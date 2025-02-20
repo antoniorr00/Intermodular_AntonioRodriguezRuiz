@@ -3,9 +3,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    //creamos una lista de pacientes
     private static ArrayList<Paciente> listaPacientes = new ArrayList<>();
+
+    //hacemos el scanner para poder usarlo en toda la clase
     private static Scanner scanner = new Scanner(System.in);
 
+    //validamos la fecha
     public static boolean validacionFechaNac(String fecha) {
         if (fecha == null || fecha.length() != 10) return false;
         String[] partes = fecha.split("/");
@@ -22,6 +26,7 @@ public class Main {
         }
     }
 
+    //metodo imprimir menu
     public static void imprimirMenu(){
         System.out.println();
         System.out.println("Menú:");
@@ -34,29 +39,34 @@ public class Main {
         System.out.print("Elige una opción: ");
     }
 
+    //validacion de telefono
     public static boolean validacionTelefono(String numeroTelefono) {
-        return numeroTelefono.matches("\\d{9}");
-    }
+        return numeroTelefono.matches("\\d{9}"); //utilizo .matches() para que compare con numero de telefono, comprobando que se han introducido 9 digitos
+    }                                            // devolvera true si se cumple, no haciendo falta el uso de un if-else
 
+    //validacion de sip que seran 8 digitos numericos
     public static boolean validacionSIP(String sip) {
         return sip.matches("\\d{8}");
     }
 
+    //validacion nombre
     public static boolean validacionNombrePaciente(String nombre) {
-        return nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+");
+        return nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+"); //solo dejaremos introducir letras y espacios
     }
 
+    //metodo de añadir paciente
     public static void addPaciente(Paciente paciente) {
-        if (findPaciente(paciente.getSIP_paciente()) == null) {
-            listaPacientes.add(paciente);
+        if (findPaciente(paciente.getSIP_paciente()) == null) { //si el paciente no se encuentra ya en la lista
+            listaPacientes.add(paciente); // lo añadimos
             System.out.println("Paciente agregado correctamente.");
-        } else {
+        } else { //si se encuentra ya en la lista
             System.out.println("Error: SIP ya registrado.");
         }
     }
 
+    //metodo para devolver un paciente buscando por su sip
     public static Paciente findPaciente(String sip) {
-        for (Paciente p : listaPacientes) {
+        for (Paciente p : listaPacientes) { //buscamos en la lista de pacientes por su sip
             if (p.getSIP_paciente().equals(sip)) {
                 return p;
             }
@@ -64,6 +74,7 @@ public class Main {
         return null;
     }
 
+    //metodo para eliminar un paciente buscando por su sip
     public static void removePaciente(String sip) {
         Paciente paciente = findPaciente(sip);
         if (paciente != null) {
@@ -74,22 +85,24 @@ public class Main {
         }
     }
 
+    //metodo para actualizar un paciente
     public static void updatePaciente(String sip, String nuevoNombre, String nuevoTelefono, String nuevaFecha) {
         Paciente paciente = findPaciente(sip);
         if (paciente != null) {
             if (validacionNombrePaciente(nuevoNombre) && validacionTelefono(nuevoTelefono) && validacionFechaNac(nuevaFecha)) {
-                paciente.setNombrePac(nuevoNombre);
+                paciente.setNombrePac(nuevoNombre); //actualizamos los nuevos datos
                 paciente.setTelefono(nuevoTelefono);
                 paciente.setFechaNac(nuevaFecha);
                 System.out.println("Paciente actualizado correctamente.");
             } else {
-                System.out.println("Error: Alguno de los datos es inválido.");
+                System.out.println("Error: Alguno de los datos es inválido."); 
             }
         } else {
             System.out.println("Paciente no encontrado.");
         }
     }
 
+    //metodo para buscar un paciente por su sip e imprimir su nombre
     public static void queryPaciente(String sip) {
         Paciente paciente = findPaciente(sip);
         if (paciente != null) {
@@ -99,6 +112,7 @@ public class Main {
         }
     }
 
+    //metodo para imprimir la lista de pacientes
     public static void printPacientes() {
         if (listaPacientes.isEmpty()) {
             System.out.println("No hay pacientes registrados.");
