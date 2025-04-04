@@ -1,6 +1,9 @@
 //Antonio Rodríguez Ruiz
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     //creamos una lista de pacientes
@@ -34,7 +37,7 @@ public class Main {
         System.out.println("2. Eliminar paciente");
         System.out.println("3. Actualizar paciente");
         System.out.println("4. Consultar paciente");
-        System.out.println("5. Imprimir pacientes");
+        System.out.println("5. Generar lista de pacientes XML y guardar en archivo de texto");
         System.out.println("6. Salir");
         System.out.print("Elige una opción: ");
     }
@@ -95,7 +98,7 @@ public class Main {
                 paciente.setFechaNac(nuevaFecha);
                 System.out.println("Paciente actualizado correctamente.");
             } else {
-                System.out.println("Error: Alguno de los datos es inválido."); 
+                System.out.println("Error: Alguno de los datos es inválido.");
             }
         } else {
             System.out.println("Paciente no encontrado.");
@@ -116,15 +119,71 @@ public class Main {
     public static void printPacientes() {
         if (listaPacientes.isEmpty()) {
             System.out.println("No hay pacientes registrados.");
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("/home/antrodrui/IdeaProjects/ProyectoIntermodular/pacientes.txt"));
+                writer.write("No hay pacientes registrados.\n");
+                writer.close();
+            } catch (IOException e) {
+                System.out.println("Error al escribir en el archivo: " + e.getMessage());
+            }
         } else {
-            System.out.println("Lista de Pacientes:");
-            for (Paciente p : listaPacientes) {
-                System.out.println("SIP: " + p.getSIP_paciente() + ", Nombre: " + p.getNombrePac());
+            System.out.println("<PACIENTES>");
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader("/home/antrodrui/IdeaProjects/ProyectoIntermodular/pacientes.txt"));
+                Set<String> pacientesExistentes = new HashSet<>();
+                String linea;
+
+                // Leer el archivo y almacenar los pacientes existentes
+                while ((linea = reader.readLine()) != null) {
+                    pacientesExistentes.add(linea.trim());
+                }
+                reader.close();
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter("/home/antrodrui/IdeaProjects/ProyectoIntermodular/pacientes.txt"));
+                writer.write("<PACIENTES>\n");
+
+                for (Paciente p : listaPacientes) {
+                    String pacienteStr = p.toString();
+                    // Solo guardar el paciente si no está en el archivo ya
+                    if (!pacientesExistentes.contains(pacienteStr)) {
+                        System.out.println(pacienteStr);
+                        writer.write(pacienteStr + "\n");
+                    }
+                }
+
+                System.out.println("</PACIENTES>");
+                writer.write("</PACIENTES>\n");
+                writer.close();
+
+            } catch (IOException e) {
+                System.out.println("Error al escribir o leer en el archivo: " + e.getMessage());
             }
         }
     }
 
+
     public static void main(String[] args) {
+        //creamos objetos paciente
+        Paciente paciente1 = new Paciente("31/12/2000", "603456781", "Juan Perez Grao", "10000001");
+        Paciente paciente2 = new Paciente("20/10/1999", "614567829", "Pedro Rodriguez Gonzalez", "10000002");
+        Paciente paciente3 = new Paciente("12/08/2007", "634757281", "Antonio Lopez Sanchez", "10000003");
+        Paciente paciente4 = new Paciente("10/01/2020", "653258529", "Jose Soler Romero", "10000004");
+        Paciente paciente5 = new Paciente("09/03/2006", "665429548", "Luis Ruiz Diaz", "10000005");
+        Paciente paciente6 = new Paciente("03/06/2003", "640213232", "Ana Calatayud Clavel", "10000006");
+        Paciente paciente7 = new Paciente("01/05/1975", "664920822", "Blanca Garcia Miralles", "10000007");
+        Paciente paciente8 = new Paciente("21/11/1995", "618312893", "Paula Espinosa Celndran", "10000008");
+
+        //añadimos los pacientes a la lista
+        listaPacientes.add(paciente1);
+        listaPacientes.add(paciente2);
+        listaPacientes.add(paciente3);
+        listaPacientes.add(paciente4);
+        listaPacientes.add(paciente5);
+        listaPacientes.add(paciente6);
+        listaPacientes.add(paciente7);
+        listaPacientes.add(paciente8);
+
+
         boolean continuar = true;
         while (continuar) {
             imprimirMenu();
