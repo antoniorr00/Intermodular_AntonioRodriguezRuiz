@@ -41,5 +41,13 @@ class Paciente {
         this.nombrePac = nombrePac;
     }
 
+    @Override
+    public String toString() {
+        return "     <PACIENTE>\n" +
+                    "        <SIP_paciente>" + SIP_paciente + "</SIP_paciente>\n" +
+                    "        <nombrePac>" + nombrePac + "</nombrePac>\n" +
+                    "        <telefono>" + telefono + "</telefono>\n" +
+                    "        <fechaNac>" + fechaNac + "</fechaNac>\n" +
+                "     </PACIENTE>";
+    }
 }
-
